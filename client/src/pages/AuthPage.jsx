@@ -19,11 +19,15 @@ const AuthPage = () => {
         }));
     };
 
-    const handleForm = (e) => {
+    const handleForm = async (e) => {
         e.preventDefault();
         if (isLogin) {
-            const data = loginControl(formData);
-            console.log(data);
+            try {
+                const data = await loginControl(formData);
+                console.log(data);
+            } catch (err) {
+                console.log(err)
+            }
         } else {
             const data = signupControl(formData);
             console.log(data);

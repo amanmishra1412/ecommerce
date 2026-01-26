@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Link} from "react-router-dom";
 
 const Header = () => {
     const [searchMode, setSearchMode] = useState(false);
@@ -33,9 +34,9 @@ const Header = () => {
                                 <i className="ri-search-line"></i>
                             </button>
 
-                            <button>
+                            <Link to="/auth">
                                 <i className="ri-user-line"></i>
-                            </button>
+                            </Link>
 
                             <button className="relative">
                                 <i className="ri-shopping-cart-line"></i>
