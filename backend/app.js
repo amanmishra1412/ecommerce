@@ -6,6 +6,7 @@ const cors = require("cors");
 const auth = require("./middlewares/auth.middleware");
 const authRoute = require("./routes/auth.routes");
 const homeRoute = require("./routes/home.routes");
+const categoryRoute = require("./routes/category.routes")
 
 app.use(
     cors({
@@ -24,5 +25,6 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoute);
 app.use("/home", auth, homeRoute);
+app.use("/category", categoryRoute)
 
 module.exports = app;
