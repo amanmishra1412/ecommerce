@@ -21,4 +21,3 @@ exports.womendresses = (req, res) => {
     message: "Women dresses set category",
   });
 };
-
