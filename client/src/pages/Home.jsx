@@ -47,7 +47,7 @@ const Home = () => {
                         {[1, 2, 3, 4].map((item) => (
                             <div
                                 key={item}
-                                className="min-w-[220px] md:min-w-0"
+                                className="min-w-55 md:min-w-0"
                             >
                                 <img className="rounded-lg mb-2" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" />
                                 <p className="text-sm">Kurti Name</p>

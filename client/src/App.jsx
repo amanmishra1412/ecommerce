@@ -22,6 +22,7 @@ import AdminDashboard from "./Admin/Dashboard";
 import AdminProducts from "./Admin/Products";
 import AdminOrders from "./Admin/Orders";
 import AdminUsers from "./Admin/Users";
+import SingleView from "./pages/SingleView";
 
 const App = () => {
     return (
@@ -31,6 +32,7 @@ const App = () => {
                 <Route index element={<Home />} />
                 <Route path="about" element={<About />} />
                 <Route path="collection" element={<Shop />} />
+                <Route path="collection/:id" element={<SingleView />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="cart" element={<Cart />} />
 
