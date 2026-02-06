@@ -26,11 +26,15 @@ const AuthPage = () => {
                 const data = await loginControl(formData);
                 console.log(data);
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
         } else {
-            const data = signupControl(formData);
-            console.log(data);
+            try {
+                const data = await signupControl(formData);
+                console.log(data);
+            } catch (err) {
+                console.log(err);
+            }
         }
     };
 

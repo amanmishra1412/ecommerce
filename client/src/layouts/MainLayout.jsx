@@ -7,7 +7,7 @@ const MainLayout = () => {
   return (
     <>
             <Header />
-            <main className='container mx-auto px-4 w-full'>
+            <main className='w-full bg-[#FBF8EF]'>
                 {<Outlet />}
 
             </main>

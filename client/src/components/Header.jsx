@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
     const [searchMode, setSearchMode] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <header className="bg-gray-600 h-20 flex items-center">
+        <header className="bg-[#FBF8EF] h-20 flex items-center">
             <div className="container mx-auto px-4 w-full">
                 {/* NORMAL HEADER */}
                 {!searchMode && (
@@ -21,15 +21,54 @@ const Header = () => {
                         </div>
 
                         {/* Desktop Nav */}
-                        <nav className="hidden md:flex gap-6 text-white">
-                            <a href="#">Home</a>
-                            <a href="#">Shop</a>
-                            <a href="#">About</a>
-                            <a href="#">Contact</a>
+                        <nav className="hidden md:flex gap-6">
+                            <NavLink
+                                to="/"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "text-green-700 font-semibold"
+                                        : "text-gray-700 hover:text-green-700"
+                                }
+                            >
+                                Home
+                            </NavLink>
+
+                            <NavLink
+                                to="/about"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "text-green-700 font-semibold"
+                                        : "text-gray-700 hover:text-green-700"
+                                }
+                            >
+                                About
+                            </NavLink>
+
+                            <NavLink
+                                to="/collection"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "text-green-700 font-semibold"
+                                        : "text-gray-700 hover:text-green-700"
+                                }
+                            >
+                                Product
+                            </NavLink>
+
+                            <NavLink
+                                to="/contact"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "text-green-700 font-semibold"
+                                        : "text-gray-700 hover:text-green-700"
+                                }
+                            >
+                                Contact
+                            </NavLink>
                         </nav>
 
                         {/* Icons */}
-                        <div className="flex items-center gap-4 text-white text-xl">
+                        <div className="flex items-center gap-4 text-xl">
                             <button onClick={() => setSearchMode(true)}>
                                 <i className="ri-search-line"></i>
                             </button>
@@ -39,7 +78,9 @@ const Header = () => {
                             </Link>
 
                             <button className="relative">
+                                <Link to="/cart">
                                 <i className="ri-shopping-cart-line"></i>
+                            </Link>
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1 rounded-full">
                                     2
                                 </span>
@@ -61,7 +102,7 @@ const Header = () => {
                     <div className="flex items-center gap-3">
                         {/* Back / Close */}
                         <button
-                            className="text-white text-2xl"
+                            className=" text-2xl"
                             onClick={() => setSearchMode(false)}
                         >
                             <i className="ri-close-line"></i>
@@ -76,7 +117,7 @@ const Header = () => {
                         />
 
                         {/* Search Icon */}
-                        <button className="text-white text-2xl">
+                        <button className=" text-2xl">
                             <i className="ri-search-line"></i>
                         </button>
                     </div>
