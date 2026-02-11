@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { loginControl, signupControl } from "../services/auth.service";
+import Swal from "sweetalert2";
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -21,20 +23,38 @@ const AuthPage = () => {
 
     const handleForm = async (e) => {
         e.preventDefault();
-        if (isLogin) {
-            try {
-                const data = await loginControl(formData);
-                console.log(data);
-            } catch (err) {
-                console.log(err);
+        setLoading(true);
+
+        if (!isLogin && formData.password !== formData.confirmPassword) {
+            setLoading(false);
+            return Swal.fire({
+                icon: "error",
+                title: "Password mismatch",
+                text: "Passwords same hone chahiye",
+            });
+        }
+
+        try {
+            if (isLogin) {
+                const res = await loginControl(formData);
+                Swal.fire({
+                    icon: "success",
+                    text: res.data.message,
+                });
+            } else {
+                const res = await signupControl(formData);
+                Swal.fire({
+                    icon: "success",
+                    text: res.data.message,
+                });
             }
-        } else {
-            try {
-                const data = await signupControl(formData);
-                console.log(data);
-            } catch (err) {
-                console.log(err);
-            }
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                text: err.response?.data?.message || "Something Went worng",
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -126,9 +146,14 @@ const AuthPage = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 active:scale-[0.98] transition"
+                        disabled={loading}
+                        className={`w-full py-2.5 rounded-lg font-semibold transition ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"}`}
                     >
-                        {isLogin ? "Login" : "Create Account"}
+                        {loading
+                            ? "Please wait..."
+                            : isLogin
+                              ? "Login"
+                              : "Create Account"}
                     </button>
                 </form>
 
