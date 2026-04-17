@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
     const [searchMode, setSearchMode] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const { user, setUser } = useAuth();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const handleLogout = () => {
+        setUser(null);
+        setDropdownOpen(false);
+    };
 
     return (
         <header className="bg-[#FBF8EF] h-20 flex items-center">
@@ -73,14 +82,70 @@ const Header = () => {
                                 <i className="ri-search-line"></i>
                             </button>
 
-                            <Link to="/auth">
-                                <i className="ri-user-line"></i>
-                            </Link>
+                            {/* User / Login */}
+                            {user ? (
+                                <div className="relative">
+                                    <button
+                                        onClick={() =>
+                                            setDropdownOpen(!dropdownOpen)
+                                        }
+                                    >
+                                        {user.profileImg ? (
+                                            <img
+                                                src={user.profileImg}
+                                                alt="profile"
+                                                className="w-8 h-8 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold">
+                                                {user.name
+                                                    ?.charAt(0)
+                                                    .toUpperCase()}
+                                            </div>
+                                        )}
+                                    </button>
 
+                                    {/* Dropdown */}
+                                    {dropdownOpen && (
+                                        <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-lg text-sm z-50">
+                                            <Link
+                                                to="/profile"
+                                                onClick={() =>
+                                                    setDropdownOpen(false)
+                                                }
+                                                className="block px-4 py-2 hover:bg-gray-100"
+                                            >
+                                                My Profile
+                                            </Link>
+                                            <Link
+                                                to="/orders"
+                                                onClick={() =>
+                                                    setDropdownOpen(false)
+                                                }
+                                                className="block px-4 py-2 hover:bg-gray-100"
+                                            >
+                                                My Orders
+                                            </Link>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link to="/auth">
+                                    <i className="ri-user-line"></i>
+                                </Link>
+                            )}
+
+                            {/* Cart */}
                             <button className="relative">
                                 <Link to="/cart">
-                                <i className="ri-shopping-cart-line"></i>
-                            </Link>
+                                    <i className="ri-shopping-cart-line"></i>
+                                </Link>
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1 rounded-full">
                                     2
                                 </span>

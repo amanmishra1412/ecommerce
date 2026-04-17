@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { loginControl, signupControl } from "../services/auth.service";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const { setUser } = useAuth();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -43,6 +46,7 @@ const AuthPage = () => {
                     icon: "success",
                     text: res.data.message,
                 }).then(() => {
+                    setUser(res.data.userData);
                     navigate("/", { replace: true });
                 });
             } else {

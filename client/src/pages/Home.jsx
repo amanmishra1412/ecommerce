@@ -1,7 +1,10 @@
 import React from "react";
 import Category from "./Category";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
+    const { user } = useAuth();
+    console.log(user);
     return (
         <>
             <section
@@ -45,11 +48,11 @@ const Home = () => {
 
                     <div className="flex gap-4 overflow-x-auto md:grid md:grid-cols-4 md:gap-6">
                         {[1, 2, 3, 4].map((item) => (
-                            <div
-                                key={item}
-                                className="min-w-55 md:min-w-0"
-                            >
-                                <img className="rounded-lg mb-2" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" />
+                            <div key={item} className="min-w-55 md:min-w-0">
+                                <img
+                                    className="rounded-lg mb-2"
+                                    src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+                                />
                                 <p className="text-sm">Kurti Name</p>
                                 <p className="text-sm text-gray-600">
                                     From Rs. 1,295
@@ -92,7 +95,10 @@ const Home = () => {
                             "Collared Kurtis",
                         ].map((item) => (
                             <div key={item}>
-                                <img className="rounded-lg mb-2" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" />
+                                <img
+                                    className="rounded-lg mb-2"
+                                    src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+                                />
                                 <p className="text-sm">{item} →</p>
                             </div>
                         ))}
