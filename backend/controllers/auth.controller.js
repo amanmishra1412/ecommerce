@@ -1,34 +1,26 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const { JWT_SECRET } = require("../config/env");
 
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, authProvider, providerId } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!name || !email || !authProvider) {
+        if (!name || !email) {
             return res.status(400).json({
-                message: "name, email and authProvider are required",
+                message: "name, email are required",
             });
         }
 
-        if (authProvider === "local") {
-            if (!password) {
-                return res.status(400).json({
-                    message: "Password is required for local signup",
-                });
-            }
-        }
-
-        if (authProvider === "google" || authProvider === "facebook") {
-            if (!providerId) {
-                return res.status(400).json({
-                    message: "providerId is required for social login",
-                });
-            }
+        if (password.length < 6) {
+            return res.status(400).json({
+                message: "Password must be at least 6 characters",
+            });
         }
 
         let exist = await User.findOne({ email });
+
         if (exist) {
             return res.status(400).json({
                 message: "Email already registered",
@@ -40,67 +32,72 @@ exports.signup = async (req, res) => {
             name,
         };
 
-        if (authProvider === "local") {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-            userData.authProvider = authProvider;
-            userData.password = hashedPassword;
-        }
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        if (authProvider === "google" || authProvider === "facebook") {
-            userData.authProvider = authProvider;
-            userData.providerId = providerId;
-        }
+        userData.password = hashedPassword;
+
         const user = await User.create(userData);
+
+        let token = await jwt.sign({ id: user._id }, JWT_SECRET, {
+            expiresIn: "7d",
+        });
+
+        res.cookie("token", token)
+
+        const userDetail = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        };
 
         return res.status(201).json({
             message: "User signed up...",
+            userDetail
         });
     } catch (err) {
         console.log("SIGNUP ERROR : ", err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "Server Error" });
     }
 };
 
 exports.login = async (req, res) => {
-    const { email, password, providerId } = req.body;
+    const { email, password } = req.body;
     try {
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email }).select('+password');
         if (!user) {
             return res.status(404).json({
-                message: "User not found ",
+                message: "Invalid credentials",
             });
         }
-        if (user.authProvider === "local") {
-            let isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(401).json({
-                    message: "Wrong credentials",
-                });
-            }
-        } else if (
-            user.authProvider === "google" ||
-            user.authProvider === "facebook"
-        ) {
-            let isMatch = user.providerId === providerId;
-            if (!isMatch) {
-                return res.status(401).json({
-                    message: "Invalid social login credentials",
-                });
-            }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({
+                message: "Invalid credentials",
+            });
         }
 
-        let token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        let token = await jwt.sign({ id: user._id }, JWT_SECRET, {
             expiresIn: "7d",
         });
-        console.log(token);
+
+        res.cookie("token", token)
+
+        const userData = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        };
+        // console.log(token);
         res.status(200).json({
             message: "Login Success",
-            token,
+            userData
         });
-    } catch (error) {
+    } catch (err) {
         res.status(400).json({
-            message: error.message,
+            message: err.message,
         });
     }
 };

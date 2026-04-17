@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { loginControl, signupControl } from "../services/auth.service";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -40,12 +42,16 @@ const AuthPage = () => {
                 Swal.fire({
                     icon: "success",
                     text: res.data.message,
+                }).then(() => {
+                    navigate("/", { replace: true });
                 });
             } else {
                 const res = await signupControl(formData);
                 Swal.fire({
                     icon: "success",
                     text: res.data.message,
+                }).then(() => {
+                    navigate("/", { replace: true });
                 });
             }
         } catch (err) {

@@ -7,6 +7,7 @@ const auth = require("./middlewares/auth.middleware");
 const authRoute = require("./routes/auth.routes");
 const homeRoute = require("./routes/home.routes");
 const categoryRoute = require("./routes/category.routes");
+const cookieParser = require("cookie-parser");
 
 app.use(
   cors({
@@ -15,6 +16,8 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(cookieParser())
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
