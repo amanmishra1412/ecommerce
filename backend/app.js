@@ -7,6 +7,7 @@ const auth = require("./middlewares/auth.middleware");
 const authRoute = require("./routes/auth.routes");
 const homeRoute = require("./routes/home.routes");
 const categoryRoute = require("./routes/category.routes");
+const productRoute = require("./routes/product.routes");
 const cookieParser = require("cookie-parser");
 
 app.use(
@@ -29,5 +30,6 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoute);
 app.use("/home", auth, homeRoute);
 app.use("/category", categoryRoute);
+app.use("/product", productRoute);
 
 module.exports = app;

@@ -96,19 +96,21 @@ exports.login = async (req, res) => {
             userData
         });
     } catch (err) {
-        res.status(400).json({
-            message: err.message,
-        });
+        res.status(500).json({ message: "Server Error" });
     }
 };
 
 exports.getMe = async (req, res) => {
-    const { id } = req.user
-    const user = await User.findById(id)
-    if (!user) {
-        res.status(404).json({ message: "User not found" })
-    }
+    try {
+        const { id } = req.user
+        const user = await User.findById(id)
+        if (!user) {
+            res.status(404).json({ message: "User not found" })
+        }
 
-    res.status(200).json({ message: "Success", user })
+        res.status(200).json({ message: "Success", user })
+    } catch (err) {
+        res.status(500).json({ message: "Server Error" });
+    }
 
 }
