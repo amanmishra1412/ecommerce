@@ -38,7 +38,7 @@ exports.signup = async (req, res) => {
 
         const user = await User.create(userData);
 
-        let token = await jwt.sign({ id: user._id }, JWT_SECRET, {
+        let token = await jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
             expiresIn: "7d",
         });
 
@@ -78,7 +78,7 @@ exports.login = async (req, res) => {
             });
         }
 
-        let token = await jwt.sign({ id: user._id }, JWT_SECRET, {
+        let token = await jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
             expiresIn: "7d",
         });
 

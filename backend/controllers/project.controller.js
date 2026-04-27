@@ -9,10 +9,35 @@ const getAllProduct = async (req, res) => {
         }
 
         res.status(200).json({ msg: "Product Fetch Success", product })
+
     } catch (err) {
-        console.log(err.message);
         res.status(500).json({ message: "Server Error" });
     }
 }
 
-module.exports = { getAllProduct }
+const getSingleProduct = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        if (!id) {
+            res.status(400).json({ message: "ID required" })
+        }
+
+        const prod = await productModel.findById(id)
+
+        if (!product) {
+            res.status(400).json({ message: "Id Does not exist" })
+        }
+
+        res.status(200).json({ msg: "Product Fetch Success", product })
+
+    } catch (err) {
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+
+const createProduct = async (req, res) => {
+
+}
+
+module.exports = { getAllProduct, getSingleProduct, createProduct }
