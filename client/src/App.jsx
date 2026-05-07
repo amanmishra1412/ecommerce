@@ -23,6 +23,7 @@ import AdminProducts from "./Admin/Products";
 import AdminOrders from "./Admin/Orders";
 import AdminUsers from "./Admin/Users";
 import SingleView from "./pages/SingleView";
+import CreateProduct from "./Admin/CreateProduct";
 
 const App = () => {
     return (
@@ -47,6 +48,7 @@ const App = () => {
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
                     <Route path="products" element={<AdminProducts />} />
+                    <Route path="create-product" element={<CreateProduct />} />
                     <Route path="orders" element={<AdminOrders />} />
                     <Route path="users" element={<AdminUsers />} />
                 </Route>

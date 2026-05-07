@@ -1,6 +1,5 @@
 import api from "./api.service";
 
-
 export const loginControl = async (data) => {
     const res = await api.post(`/auth/login`, data,);
     return res;

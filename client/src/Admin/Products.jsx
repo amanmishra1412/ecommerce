@@ -1,11 +1,16 @@
+import { Link } from "react-router-dom";
+
 const AdminProducts = () => {
     return (
         <>
             <div className="flex justify-between mb-6">
                 <h1 className="text-2xl font-semibold">Products</h1>
-                <button className="bg-gray-900 text-white px-4 py-2 text-sm">
+                <Link
+                    to="../create-product"
+                    className="bg-gray-900 text-white px-4 py-2 text-sm"
+                >
                     + Add Product
-                </button>
+                </Link>
             </div>
 
             <div className="bg-white rounded-lg overflow-x-auto">

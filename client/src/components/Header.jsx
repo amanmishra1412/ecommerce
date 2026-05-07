@@ -117,6 +117,19 @@ const Header = () => {
                                             >
                                                 My Profile
                                             </Link>
+                                            {user.role === "admin" ? (
+                                                <Link
+                                                    to="/admin"
+                                                    onClick={() =>
+                                                        setDropdownOpen(false)
+                                                    }
+                                                    className="block px-4 py-2 hover:bg-gray-100"
+                                                >
+                                                    Dashboard
+                                                </Link>
+                                            ) : (
+                                                ""
+                                            )}
                                             <Link
                                                 to="/orders"
                                                 onClick={() =>
