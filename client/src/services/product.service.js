@@ -26,3 +26,23 @@ export const getSingleProduct = async (slug) => {
         throw err;
     }
 };
+
+export const updateProd = async (id, formData) => {
+    try {
+        const res = await api.put(`/product/${id}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return res.data;
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const deleteProd = async (id) => {
+    try {
+        const res = await api.delete(`/product/delete-product/${id}`);
+        return res.data;
+    } catch (err) {
+        throw err;
+    }
+};

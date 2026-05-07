@@ -130,7 +130,7 @@ const SingleView = () => {
                     </h2>
 
                     <p className="text-sm text-gray-700 leading-relaxed">
-                        {product.longDesc || product.description}
+                        {product.description}
                     </p>
                 </div>
 
@@ -141,10 +141,10 @@ const SingleView = () => {
                     </h2>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {product.relatedProducts?.map((item) => (
+                        {product.relatedProducts?.map((item,idx) => (
                             <Link
                                 to={`/collection/${item.slug}`}
-                                key={item._id}
+                                key={idx}
                                 className="group cursor-pointer"
                             >
                                 <img
