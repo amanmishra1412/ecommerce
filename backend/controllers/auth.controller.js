@@ -82,7 +82,12 @@ exports.login = async (req, res) => {
             expiresIn: "7d",
         });
 
-        res.cookie("token", token)
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "Lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
         const userData = {
             id: user._id,

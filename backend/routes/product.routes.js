@@ -15,7 +15,7 @@ const upload = multer({
 });
 
 route.get("/", getAllProduct)
-route.get("/:id", getSingleProduct)
+route.get("/:slug", getSingleProduct)
 route.post("/create", authMiddleware, adminMiddleware, upload.array("images", 5), createProduct);
 
 module.exports = route

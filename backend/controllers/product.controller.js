@@ -19,13 +19,9 @@ const getAllProduct = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
     try {
-        const { id } = req.params
+        const { slug } = req.params
 
-        if (!id) {
-            res.status(400).json({ message: "ID required" })
-        }
-
-        const prod = await productModel.findById(id)
+        const product = await productModel.findOne({ slug });
 
         if (!product) {
             res.status(400).json({ message: "Id Does not exist" })

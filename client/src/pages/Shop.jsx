@@ -1,44 +1,42 @@
-import React, { useState } from "react";
-
-const products = [
-    {
-        id: 1,
-        name: "Teal Blue Silk Kurti",
-        price: 1295,
-        image: "https://images.unsplash.com/photo-1542060748-10c28b62716f",
-        soldOut: false,
-    },
-    {
-        id: 2,
-        name: "Rani Pink Silk Kurti",
-        price: 1295,
-        image: "https://images.unsplash.com/photo-1520974735194-6c6b0e8a3e96",
-        soldOut: true,
-    },
-    {
-        id: 3,
-        name: "Red A-Line",
-        price: 1495,
-        image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
-        soldOut: false,
-    },
-    {
-        id: 4,
-        name: "Blue Cotton Kurti",
-        price: 1295,
-        image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
-        soldOut: true,
-    },
-];
+import React, { useMemo, useState } from "react";
+import { useProduct } from "../context/ProductContext";
+import { Link } from "react-router-dom";
 
 const Shop = () => {
-    const [availability, setAvailability] = useState("all");
+    const { products, loading, error } = useProduct();
 
-    const filteredProducts = products.filter((p) => {
-        if (availability === "available") return !p.soldOut;
-        if (availability === "soldout") return p.soldOut;
-        return true;
-    });
+    const [availability, setAvailability] = useState("all");
+    const [sortBy, setSortBy] = useState("new");
+
+    const filteredProducts = useMemo(() => {
+        let updatedProducts = [...products];
+
+        if (sortBy === "low") {
+            updatedProducts.sort((a, b) => a.price - b.price);
+        }
+
+        if (sortBy === "high") {
+            updatedProducts.sort((a, b) => b.price - a.price);
+        }
+
+        return updatedProducts;
+    }, [products, availability, sortBy]);
+
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <h1 className="text-2xl">Loading...</h1>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <h1 className="text-red-500 text-2xl">{error}</h1>
+            </div>
+        );
+    }
 
     return (
         <section className="bg-[#FBF8EF] w-full min-h-screen">
@@ -52,63 +50,64 @@ const Shop = () => {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10 text-sm">
                     {/* Left Filters */}
                     <div className="flex gap-4">
+                        {/* Price Sort */}
                         <select
-                            onChange={(e) => setAvailability(e.target.value)}
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
                             className="bg-transparent border-b border-gray-400 focus:outline-none"
                         >
-                            <option value="all">Availability</option>
-                            <option value="available">Available</option>
-                            <option value="soldout">Sold Out</option>
-                        </select>
-
-                        <select className="bg-transparent border-b border-gray-400 focus:outline-none">
-                            <option>Price</option>
-                            <option>Low to High</option>
-                            <option>High to Low</option>
+                            <option value="new">Sort By</option>
+                            <option value="low">Low to High</option>
+                            <option value="high">High to Low</option>
                         </select>
                     </div>
 
-                    {/* Right Sort */}
+                    {/* Right Info */}
                     <div className="flex gap-4 text-gray-600">
-                        <p>Sort by: Date, new to old</p>
+                        <p>Sort by: {sortBy}</p>
                         <p>{filteredProducts.length} products</p>
                     </div>
                 </div>
 
                 {/* Product Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {filteredProducts.map((product) => (
-                        <div key={product.id} className="group">
-                            <div className="relative overflow-hidden rounded-lg mb-3">
+                    {filteredProducts.map((product, idx) => (
+                        <Link
+                            to={`/collection/${product.slug}`}
+                            key={idx}
+                            className="group"
+                        >
+                            {/* Image */}
+                            <div className="relative overflow-hidden rounded-lg mb-3 bg-white">
                                 <img
-                                    src={product.image}
+                                    src={
+                                        product.images?.[0] ||
+                                        "https://via.placeholder.com/300"
+                                    }
                                     alt={product.name}
                                     className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
                                 />
-
-                                {product.soldOut && (
-                                    <span className="absolute bottom-2 left-2 bg-green-900 text-white text-xs px-2 py-1 rounded">
-                                        Sold out
-                                    </span>
-                                )}
                             </div>
 
-                            <p className="text-sm mb-1">{product.name}</p>
-                            <p className="text-sm text-gray-600">
-                                From Rs. {product.price.toLocaleString()}
+                            {/* Product Info */}
+                            <p className="text-sm mb-1 line-clamp-1">
+                                {product.name}
                             </p>
-                        </div>
+
+                            <p className="text-sm text-gray-600">
+                                Rs. {product.price?.toLocaleString()}
+                            </p>
+                        </Link>
                     ))}
                 </div>
 
-                {/* Pagination */}
-                <div className="flex justify-center gap-4 mt-16 text-sm">
-                    <button className="opacity-50">‹</button>
-                    <button className="underline">1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>›</button>
-                </div>
+                {filteredProducts.length === 0 && (
+                    <div className="text-center py-20">
+                        <h2 className="text-2xl font-medium">
+                            No Products Found
+                        </h2>
+                    </div>
+                )}
             </div>
         </section>
     );

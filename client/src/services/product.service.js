@@ -8,3 +8,21 @@ export const createProd = async (data) => {
         throw err
     }
 }
+
+export const getProd = async () => {
+    try {
+        const res = await api.get('/product')
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+
+export const getSingleProduct = async (slug) => {
+    try {
+        const res = await api.get(`/product/${slug}`);
+        return res.data;
+    } catch (err) {
+        throw err;
+    }
+};

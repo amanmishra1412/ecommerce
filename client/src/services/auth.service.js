@@ -10,7 +10,7 @@ export const signupControl = async (data) => {
     return res;
 };
 
-export const getMe = async (data) => {
+export const getMe = async () => {
     const res = await api.get("/auth/get-me");
     return res;
 }

@@ -1,62 +1,69 @@
-import React, { useState } from "react";
-
-const product = {
-    id: 1,
-    name: "Teal Blue Silk Kurti",
-    price: 1295,
-    images: [
-        "https://images.unsplash.com/photo-1542060748-10c28b62716f",
-        "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
-        "https://images.unsplash.com/photo-1520975916090-3105956dac38",
-        "https://images.unsplash.com/photo-1520974735194-6c6b0e8a3e96",
-    ],
-    shortDesc: "Elegant silk kurti crafted for festive elegance.",
-    longDesc:
-        "This Teal Blue Silk Kurti is thoughtfully designed for modern women who love timeless elegance. Crafted using premium silk fabric, it offers a soft feel and graceful drape. Ideal for festive occasions, family gatherings, and celebrations. Pair it with statement earrings and traditional footwear for a complete look. The breathable fabric ensures comfort throughout the day while maintaining a refined appearance.",
-};
-
-const relatedProducts = [
-    {
-        id: 2,
-        name: "Red A-Line Kurti",
-        price: 1495,
-        image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
-    },
-    {
-        id: 3,
-        name: "Pink Festive Kurti",
-        price: 1395,
-        image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
-    },
-    {
-        id: 4,
-        name: "Green Cotton Kurti",
-        price: 1195,
-        image: "https://images.unsplash.com/photo-1520974735194-6c6b0e8a3e96",
-    },
-];
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getSingleProduct } from "../services/product.service";
 
 const SingleView = () => {
+    const { id } = useParams();
+    const [product, setProduct] = useState(null);
     const [active, setActive] = useState(0);
     const [qty, setQty] = useState(1);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                setLoading(true);
+                const data = await getSingleProduct(id);
+                setProduct(data.product);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <h1 className="text-2xl">Loading...</h1>
+            </div>
+        );
+    }
+
+    if (!product) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <h1 className="text-2xl text-red-500">Product Not Found</h1>
+            </div>
+        );
+    }
 
     return (
-        <section className="bg-[#f9f3e8]">
+        <section className="bg-[#f9f3e8] min-h-screen">
             <div className="max-w-7xl mx-auto px-4 py-12">
                 {/* TOP SECTION */}
                 <div className="grid md:grid-cols-2 gap-10">
-                    {/* IMAGE SLIDER */}
+                    {/* IMAGE SECTION */}
                     <div>
                         <img
-                            src={product.images[active]}
-                            className="w-full h-105 object-cover rounded-lg mb-4"
+                            src={
+                                product.images?.[active] ||
+                                "https://via.placeholder.com/500"
+                            }
+                            alt={product.name}
+                            className="w-full h-[500px] object-cover rounded-lg mb-4"
                         />
 
+                        {/* THUMBNAILS */}
                         <div className="flex gap-3 overflow-x-auto">
-                            {product.images.map((img, index) => (
+                            {product.images?.map((img, index) => (
                                 <img
                                     key={index}
                                     src={img}
+                                    alt="product"
                                     onClick={() => setActive(index)}
                                     className={`w-20 h-24 object-cover rounded cursor-pointer border ${
                                         active === index
@@ -74,9 +81,12 @@ const SingleView = () => {
                             {product.name}
                         </h1>
 
-                        <p className="text-lg mb-4">Rs. {product.price}</p>
+                        <p className="text-lg mb-4">
+                            Rs. {product.price?.toLocaleString()}
+                        </p>
+
                         <p className="text-sm text-gray-700 mb-6">
-                            {product.shortDesc}
+                            {product.shortDesc || product.description}
                         </p>
 
                         {/* QTY */}
@@ -88,7 +98,9 @@ const SingleView = () => {
                                 >
                                     −
                                 </button>
+
                                 <span className="px-4 py-2">{qty}</span>
+
                                 <button
                                     onClick={() => setQty(qty + 1)}
                                     className="px-4 py-2"
@@ -98,19 +110,27 @@ const SingleView = () => {
                             </div>
                         </div>
 
-                        <button className="w-full md:w-auto bg-green-900 text-white px-10 py-3 hover:bg-green-800 transition">
-                            Add to Cart
-                        </button>
+                        {/* BUTTONS */}
+                        <div className="flex gap-4 flex-wrap">
+                            <button className="bg-green-900 text-white px-10 py-3 hover:bg-green-800 transition">
+                                Add to Cart
+                            </button>
+
+                            <button className="border border-black px-10 py-3 hover:bg-black hover:text-white transition">
+                                Buy Now
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {/* LONG DESCRIPTION */}
+                {/* DESCRIPTION */}
                 <div className="mt-16 max-w-3xl">
                     <h2 className="text-xl font-medium mb-4">
                         Product Description
                     </h2>
+
                     <p className="text-sm text-gray-700 leading-relaxed">
-                        {product.longDesc}
+                        {product.longDesc || product.description}
                     </p>
                 </div>
 
@@ -121,17 +141,24 @@ const SingleView = () => {
                     </h2>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {relatedProducts.map((item) => (
-                            <div key={item.id} className="group cursor-pointer">
+                        {product.relatedProducts?.map((item) => (
+                            <Link
+                                to={`/collection/${item.slug}`}
+                                key={item._id}
+                                className="group cursor-pointer"
+                            >
                                 <img
-                                    src={item.image}
+                                    src={item.images?.[0]}
+                                    alt={item.name}
                                     className="h-64 w-full object-cover rounded-lg mb-3 group-hover:scale-105 transition"
                                 />
+
                                 <p className="text-sm">{item.name}</p>
+
                                 <p className="text-sm text-gray-600">
                                     Rs. {item.price}
                                 </p>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
