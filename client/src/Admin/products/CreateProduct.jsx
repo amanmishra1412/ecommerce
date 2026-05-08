@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
-import { createProd } from "../services/product.service";
+import { createProd } from "../../services/product.service";
 
 const CreateProduct = () => {
     const fileInputRef = useRef(null);

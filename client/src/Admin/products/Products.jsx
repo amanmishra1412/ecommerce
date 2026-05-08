@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useProduct } from "../context/ProductContext";
-import { deleteProd } from "../services/product.service";
+import { useProduct } from "../../context/ProductContext";
+import { deleteProd } from "../../services/product.service";
 import Swal from "sweetalert2";
 
 const Products = () => {
@@ -69,8 +69,8 @@ const Products = () => {
                                         width={30}
                                         height={30}
                                         className="rounded-full w-[30px] h-[30px]"
-                                        alt=""
-                                    />{" "}
+                                        alt={item.slug}
+                                    />
                                     {item.name}
                                 </td>
                                 <td className="p-4 text-center text-gray-600">

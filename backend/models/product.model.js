@@ -25,11 +25,11 @@ const productSchema = mongoose.Schema(
             required: true,
             validate: (v) => v.length > 0,
         },
-        // category: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: "Category",
-        //     required: true,
-        // },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            required: true,
+        },
         stock: {
             type: Number,
             required: true,

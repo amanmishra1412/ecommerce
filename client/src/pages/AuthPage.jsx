@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const { setUser } = useAuth();
@@ -33,9 +34,10 @@ const AuthPage = () => {
         if (!isLogin && formData.password !== formData.confirmPassword) {
             setLoading(false);
             return Swal.fire({
-                icon: "error",
-                title: "Password mismatch",
-                text: "Passwords same hone chahiye",
+                icon: "warning",
+                title: "Security Alert",
+                text: "Passwords do not match!",
+                confirmButtonColor: "#165DAE",
             });
         }
 
@@ -44,7 +46,10 @@ const AuthPage = () => {
                 const res = await loginControl(formData);
                 Swal.fire({
                     icon: "success",
+                    title: "Access Granted",
                     text: res.data.message,
+                    timer: 1500,
+                    showConfirmButton: false,
                 }).then(() => {
                     setUser(res.data.userData);
                     navigate("/", { replace: true });
@@ -53,15 +58,19 @@ const AuthPage = () => {
                 const res = await signupControl(formData);
                 Swal.fire({
                     icon: "success",
-                    text: res.data.message,
+                    title: "Registration Successful",
+                    text: "Welcome to Advance Security Solution",
+                    confirmButtonColor: "#165DAE",
                 }).then(() => {
-                    navigate("/", { replace: true });
+                    setIsLogin(true);
                 });
             }
         } catch (err) {
             Swal.fire({
                 icon: "error",
-                text: err.response?.data?.message || "Something Went worng",
+                title: "Authentication Failed",
+                text: err.response?.data?.message || "Internal Security Error",
+                confirmButtonColor: "#191F2D",
             });
         } finally {
             setLoading(false);
@@ -69,114 +78,171 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 px-4">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-                {/* Heading */}
-                <h2 className="text-2xl font-bold text-center text-gray-800">
-                    {isLogin ? "Login Account" : "Create Account"}
-                </h2>
-                <p className="text-center text-gray-500 text-sm mt-1 mb-6">
-                    {isLogin
-                        ? "Login to continue shopping"
-                        : "Join us and start shopping today"}
-                </p>
+        <div className="min-h-screen flex items-center justify-center bg-[#F2F3F4] px-4 py-12">
+            <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white">
+                {/* Left Side: Branding/Visual */}
+                <div className="hidden md:flex md:w-1/2 bg-[#191F2D] p-12 flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#165DAE]/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
 
-                {/* Social Icons */}
-                <div className="flex justify-center gap-4 mb-5">
-                    <button className="w-12 h-12 flex items-center justify-center rounded-full border hover:bg-red-50 hover:shadow-md hover:scale-105 transition">
-                        <i className="ri-google-fill text-xl text-red-500"></i>
-                    </button>
-
-                    <button className="w-12 h-12 flex items-center justify-center rounded-full border hover:bg-blue-50 hover:shadow-md hover:scale-105 transition">
-                        <i className="ri-facebook-fill text-xl text-blue-600"></i>
-                    </button>
-                </div>
-
-                {/* Divider */}
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="h-px bg-gray-300 w-full"></div>
-                    <span className="text-xs text-gray-400 text-nowrap">
-                        or continue with email
-                    </span>
-                    <div className="h-px bg-gray-300 w-full"></div>
-                </div>
-
-                {/* Form */}
-                <form
-                    onSubmit={(e) => {
-                        handleForm(e);
-                    }}
-                    className="space-y-4"
-                >
-                    {!isLogin && (
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Full Name"
-                            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    )}
-
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email Address"
-                        className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Password"
-                        className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    {!isLogin && (
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            placeholder="Confirm Password"
-                            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    )}
-
-                    {isLogin && (
-                        <div className="text-right text-sm text-blue-600 cursor-pointer hover:underline">
-                            Forgot password?
+                    <div className="relative z-10">
+                        <div className="flex items-center gap-2 mb-8">
+                            <div className="bg-white p-2 rounded-lg">
+                                <i className="ri-shield-flash-fill text-[#165DAE] text-2xl"></i>
+                            </div>
+                            <span className="text-white font-black text-xl tracking-tighter">
+                                ADVANCE
+                                <span className="text-[#165DAE]">SECURITY</span>
+                            </span>
                         </div>
-                    )}
+                        <h2 className="text-3xl font-bold text-white leading-tight">
+                            Secure Access to <br />
+                            <span className="text-[#165DAE]">
+                                Your Smart Dashboard
+                            </span>
+                        </h2>
+                        <p className="text-gray-400 mt-4 text-sm leading-relaxed">
+                            Manage your surveillance, access controls, and
+                            alarms from one professional portal.
+                        </p>
+                    </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`w-full py-2.5 rounded-lg font-semibold transition ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"}`}
-                    >
-                        {loading
-                            ? "Please wait..."
-                            : isLogin
-                              ? "Login"
-                              : "Create Account"}
-                    </button>
-                </form>
+                    <div className="relative z-10 flex items-center gap-4 text-white/50 text-xs">
+                        <div className="flex items-center gap-1">
+                            <i className="ri-lock-2-line text-[#165DAE]"></i>{" "}
+                            256-bit SSL
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <i className="ri-shield-check-line text-[#165DAE]"></i>{" "}
+                            ISO Certified
+                        </div>
+                    </div>
+                </div>
 
-                {/* Toggle */}
-                <p className="text-center text-sm text-gray-600 mt-6">
-                    {isLogin ? "New here?" : "Already have an account?"}{" "}
-                    <span
-                        onClick={() => setIsLogin(!isLogin)}
-                        className="text-blue-600 font-medium cursor-pointer hover:underline"
-                    >
-                        {isLogin ? "Create an account" : "Login"}
-                    </span>
-                </p>
+                {/* Right Side: Form */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16">
+                    <div className="mb-10">
+                        <h2 className="text-2xl font-black text-[#191F2D]">
+                            {isLogin ? "Welcome Back" : "Security Signup"}
+                        </h2>
+                        <p className="text-gray-500 text-sm mt-2">
+                            {isLogin
+                                ? "Enter your credentials to access your account."
+                                : "Create your business or residential security profile."}
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleForm} className="space-y-5">
+                        {!isLogin && (
+                            <div className="relative">
+                                <i className="ri-user-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    required
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Full Name"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm outline-none focus:border-[#165DAE] focus:ring-4 focus:ring-[#165DAE]/5 transition-all"
+                                />
+                            </div>
+                        )}
+
+                        <div className="relative">
+                            <i className="ri-mail-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input
+                                type="email"
+                                name="email"
+                                required
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Email Address"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm outline-none focus:border-[#165DAE] focus:ring-4 focus:ring-[#165DAE]/5 transition-all"
+                            />
+                        </div>
+
+                        <div className="relative">
+                            <i className="ri-lock-password-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                required
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Password"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-12 py-3 text-sm outline-none focus:border-[#165DAE] focus:ring-4 focus:ring-[#165DAE]/5 transition-all"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#165DAE]"
+                            >
+                                <i
+                                    className={
+                                        showPassword
+                                            ? "ri-eye-off-line"
+                                            : "ri-eye-line"
+                                    }
+                                ></i>
+                            </button>
+                        </div>
+
+                        {!isLogin && (
+                            <div className="relative">
+                                <i className="ri-shield-keyhole-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    required
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    placeholder="Confirm Password"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm outline-none focus:border-[#165DAE] focus:ring-4 focus:ring-[#165DAE]/5 transition-all"
+                                />
+                            </div>
+                        )}
+
+                        {isLogin && (
+                            <div className="text-right">
+                                <button
+                                    type="button"
+                                    className="text-xs font-bold text-[#165DAE] hover:underline uppercase tracking-tighter"
+                                >
+                                    Encrypted Recovery?
+                                </button>
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`w-full py-4 rounded-xl font-black text-white text-sm uppercase tracking-widest transition-all shadow-lg ${
+                                loading
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-[#165DAE] hover:bg-[#124c8d] shadow-[#165DAE]/20 active:scale-95"
+                            }`}
+                        >
+                            {loading
+                                ? "Verifying..."
+                                : isLogin
+                                  ? "Authorize Login"
+                                  : "Initialize Account"}
+                        </button>
+                    </form>
+
+                    <div className="mt-8 pt-8 border-t border-gray-100 text-center">
+                        <p className="text-sm text-gray-500">
+                            {isLogin
+                                ? "New to the platform?"
+                                : "Already registered?"}{" "}
+                            <button
+                                onClick={() => setIsLogin(!isLogin)}
+                                className="text-[#165DAE] font-black hover:underline"
+                            >
+                                {isLogin ? "SIGN UP" : "LOGIN"}
+                            </button>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );

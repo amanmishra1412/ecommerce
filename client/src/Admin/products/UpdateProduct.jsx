@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { getSingleProduct, updateProd } from "../services/product.service";
+import { getSingleProduct, updateProd } from "../../services/product.service";
 
 const UpdateProduct = () => {
     const { id } = useParams();

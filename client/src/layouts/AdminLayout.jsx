@@ -22,6 +22,12 @@ const AdminLayout = () => {
                         Dashboard
                     </NavLink>
                     <NavLink
+                        to="category"
+                        className={linkClass + " block px-4 py-2 rounded"}
+                    >
+                        Category
+                    </NavLink>
+                    <NavLink
                         to="products"
                         className={linkClass + " block px-4 py-2 rounded"}
                     >

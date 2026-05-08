@@ -19,12 +19,13 @@ import Address from "./User/Address";
 // ADMIN PAGES
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./Admin/Dashboard";
-import AdminProducts from "./Admin/Products";
 import AdminOrders from "./Admin/Orders";
 import AdminUsers from "./Admin/Users";
 import SingleView from "./pages/SingleView";
-import CreateProduct from "./Admin/CreateProduct";
-import UpdateProduct from "./Admin/UpdateProduct";
+import AdminProducts from "./Admin/Products/Products";
+import CreateProduct from "./Admin/Products/CreateProduct";
+import UpdateProduct from "./Admin/Products/UpdateProduct";
+import AdminCategory from "./Admin/category/Category";
 
 const App = () => {
     return (
@@ -54,6 +55,9 @@ const App = () => {
                         path="update-product/:id"
                         element={<UpdateProduct />}
                     />
+
+                    <Route path="category" element={<AdminCategory />} />
+
                     <Route path="orders" element={<AdminOrders />} />
                     <Route path="users" element={<AdminUsers />} />
                 </Route>
