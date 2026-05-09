@@ -45,7 +45,7 @@ const Header = () => {
                             ADVANCE
                         </span>
                         <span className="text-[#165DAE] text-[10px] font-bold tracking-[0.2em]">
-                            SECURITY
+                            SECURITY SOLUTION
                         </span>
                     </div>
                 </Link>
@@ -58,9 +58,6 @@ const Header = () => {
                         </NavLink>
                         <NavLink to="/collection" className={navStyles}>
                             Security Systems
-                        </NavLink>
-                        <NavLink to="/services" className={navStyles}>
-                            Services
                         </NavLink>
                         <NavLink to="/about" className={navStyles}>
                             About
